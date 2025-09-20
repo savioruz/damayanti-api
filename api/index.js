@@ -33,25 +33,28 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 // Swagger Documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null, {
+const swaggerOptions = {
   explorer: true,
   customCss: '.swagger-ui .topbar { display: none }',
   customSiteTitle: 'Damayanti API Documentation',
+  customCssUrl: null,
   swaggerOptions: {
-    url: '/doc.json'
+    persistAuthorization: true,
+    displayRequestDuration: true,
+    docExpansion: 'none',
+    filter: true,
+    showExtensions: true,
+    showCommonExtensions: true
   }
-}));
+};
 
-// Alternative swagger endpoint
-app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  explorer: true,
-  customCss: '.swagger-ui .topbar { display: none }',
-  customSiteTitle: 'Damayanti API Documentation'
-}));
+app.use('/api-docs', swaggerUi.serve);
+app.get('/api-docs', swaggerUi.setup(swaggerSpec, swaggerOptions));
 
 // Swagger JSON endpoint
 app.get('/doc.json', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.send(swaggerSpec);
 });
 
@@ -70,7 +73,6 @@ if (require.main === module) {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(`📚 API Documentation available at:`);
     console.log(`   - http://localhost:${PORT}/api-docs`);
-    console.log(`   - http://localhost:${PORT}/swagger`);
     console.log(`📄 Swagger JSON available at:`);
     console.log(`   - http://localhost:${PORT}/doc.json`);
     console.log(`🔧 Environment: ${process.env.NODE_ENV || 'development'}`);

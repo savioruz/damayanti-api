@@ -22,6 +22,14 @@ const options = {
           ? 'https://damayanti-api.vercel.app' 
           : `http://localhost:${process.env.PORT || 3000}`,
         description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Development server'
+      },
+      {
+        url: 'https://damayanti-api.vercel.app',
+        description: 'Production server on Vercel'
+      },
+      {
+        url: 'http://localhost:3000',
+        description: 'Local development server'
       }
     ],
     components: {
