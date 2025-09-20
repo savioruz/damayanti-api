@@ -2,10 +2,10 @@
   "name": "damayanti-api",
   "version": "1.0.0",
   "description": "Express.js API for Damayanti application with CRUD operations",
-  "main": "src/server.js",
+  "main": "api/index.js",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
+    "start": "node api/index.js",
+    "dev": "nodemon api/index.js",
     "test": "jest"
   },
   "keywords": ["express", "api", "crud", "postgresql"],
