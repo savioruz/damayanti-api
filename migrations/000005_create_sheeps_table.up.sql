@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS sheeps (
+    id VARCHAR(36) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    age INT DEFAULT 0,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    modified_at TIMESTAMPTZ DEFAULT NOW(),
+    created_by VARCHAR(36) NOT NULL,
+    modified_by VARCHAR(36) NOT NULL
+);

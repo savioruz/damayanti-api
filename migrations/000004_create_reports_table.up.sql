@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS reports (
+    id VARCHAR(36) PRIMARY KEY,
+    user_id VARCHAR(36) NOT NULL,
+    container_id VARCHAR(36) NOT NULL,
+    notes TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    modified_at TIMESTAMPTZ DEFAULT NOW(),
+    created_by VARCHAR(36) NOT NULL,
+    modified_by VARCHAR(36) NOT NULL
+);
+
+ALTER TABLE reports
+ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id)
+ON UPDATE CASCADE ON DELETE RESTRICT;
+
+ALTER TABLE reports
+ADD CONSTRAINT fk_container FOREIGN KEY (container_id) REFERENCES containers(id)
+ON UPDATE CASCADE ON DELETE RESTRICT;
