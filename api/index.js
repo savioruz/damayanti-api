@@ -39,8 +39,10 @@ const swaggerOptions = {
   customSiteTitle: 'Damayanti API Documentation',
 };
 
-app.use('/api-docs', swaggerUi.serve);
-app.get('/api-docs', swaggerUi.setup(swaggerSpec, swaggerOptions));
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/api-docs', swaggerUi.serve);
+  app.get('/api-docs', swaggerUi.setup(swaggerSpec, swaggerOptions));
+}
 
 // Swagger JSON endpoint
 app.get('/doc.json', (req, res) => {
