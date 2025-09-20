@@ -44,7 +44,7 @@ const swaggerOptions = {
   explorer: false,
   customCss: '.swagger-ui .topbar { display: none }',
   customSiteTitle: 'Damayanti API Documentation',
-  customCss: css
+  customCss: css,
 };
 
 app.use('/api-docs', express.static('node_modules/swagger-ui-dist'), swaggerUi.serve);
