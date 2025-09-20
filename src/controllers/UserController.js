@@ -72,7 +72,7 @@ class UserController {
         });
       }
 
-      hashedPassword = await hashPassword(password);
+      const hashedPassword = await hashPassword(password);
 
       const userData = {
         email,
