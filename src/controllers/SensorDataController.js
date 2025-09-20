@@ -1,5 +1,4 @@
 const SensorData = require('../models/SensorData');
-
 class SensorDataController {
   // GET /api/sensor-data
   static async getAll(req, res) {
@@ -12,18 +11,14 @@ class SensorDataController {
         date_from, 
         date_to 
       } = req.query;
-      
       const filters = {};
       if (container_id) filters.container_id = container_id;
       if (user_id) filters.user_id = user_id;
       if (date_from) filters.date_from = date_from;
       if (date_to) filters.date_to = date_to;
-
       const sensorData = await SensorData.findAll(parseInt(limit), parseInt(offset), filters);
       const total = await SensorData.count(filters);
-      
       res.json({
-        success: true,
         data: sensorData,
         pagination: {
           total,
@@ -35,72 +30,54 @@ class SensorDataController {
     } catch (error) {
       console.error('Error fetching sensor data:', error);
       res.status(500).json({
-        success: false,
-        message: 'Internal server error',
-        error: error.message
+        error: 'Internal server error'
       });
     }
   }
-
   // GET /api/sensor-data/:id
   static async getById(req, res) {
     try {
       const { id } = req.params;
       const sensorData = await SensorData.findById(id);
-      
       if (!sensorData) {
         return res.status(404).json({
-          success: false,
-          message: 'Sensor data not found'
+          error: 'Resource not found'
         });
       }
-
       res.json({
-        success: true,
         data: sensorData
       });
     } catch (error) {
       console.error('Error fetching sensor data:', error);
       res.status(500).json({
-        success: false,
-        message: 'Internal server error',
-        error: error.message
+        error: 'Internal server error'
       });
     }
   }
-
   // GET /api/sensor-data/latest/:container_id
   static async getLatestByContainer(req, res) {
     try {
       const { container_id } = req.params;
       const sensorData = await SensorData.getLatestByContainer(container_id);
-      
       if (!sensorData) {
         return res.status(404).json({
-          success: false,
           message: 'No sensor data found for this container'
         });
       }
-
       res.json({
-        success: true,
         data: sensorData
       });
     } catch (error) {
       console.error('Error fetching latest sensor data:', error);
       res.status(500).json({
-        success: false,
-        message: 'Internal server error',
-        error: error.message
+        error: 'Internal server error'
       });
     }
   }
-
   // POST /api/sensor-data
   static async create(req, res) {
     try {
       const { container_id, temperature, humidity, gas, ph, user_id } = req.body;
-
       const sensorDataObj = {
         container_id,
         temperature,
@@ -111,39 +88,29 @@ class SensorDataController {
         created_by: req.user?.id || user_id,
         modified_by: req.user?.id || user_id
       };
-
       const sensorData = new SensorData(sensorDataObj);
-      const savedSensorData = await sensorData.save();
-
+      await sensorData.save();
       res.status(201).json({
-        success: true,
-        message: 'Sensor data created successfully',
-        data: savedSensorData
+        message: 'Sensor data created successfully'
       });
     } catch (error) {
       console.error('Error creating sensor data:', error);
       res.status(500).json({
-        success: false,
-        message: 'Internal server error',
-        error: error.message
+        error: 'Internal server error'
       });
     }
   }
-
   // PUT /api/sensor-data/:id
   static async update(req, res) {
     try {
       const { id } = req.params;
       const { container_id, temperature, humidity, gas, ph, user_id } = req.body;
-      
       const existingSensorData = await SensorData.findById(id);
       if (!existingSensorData) {
         return res.status(404).json({
-          success: false,
-          message: 'Sensor data not found'
+          error: 'Resource not found'
         });
       }
-
       const updateData = {};
       if (container_id) updateData.container_id = container_id;
       if (temperature !== undefined) updateData.temperature = temperature;
@@ -151,52 +118,37 @@ class SensorDataController {
       if (gas !== undefined) updateData.gas = gas;
       if (ph !== undefined) updateData.ph = ph;
       if (user_id) updateData.user_id = user_id;
-
-      const updatedSensorData = await SensorData.update(id, updateData, req.user?.id || existingSensorData.modified_by);
-
+      await SensorData.update(id, updateData, req.user?.id || existingSensorData.modified_by);
       res.json({
-        success: true,
-        message: 'Sensor data updated successfully',
-        data: updatedSensorData
+        message: 'Sensor data updated successfully'
       });
     } catch (error) {
       console.error('Error updating sensor data:', error);
       res.status(500).json({
-        success: false,
-        message: 'Internal server error',
-        error: error.message
+        error: 'Internal server error'
       });
     }
   }
-
   // DELETE /api/sensor-data/:id
   static async delete(req, res) {
     try {
       const { id } = req.params;
-      
       const existingSensorData = await SensorData.findById(id);
       if (!existingSensorData) {
         return res.status(404).json({
-          success: false,
-          message: 'Sensor data not found'
+          error: 'Resource not found'
         });
       }
-
       await SensorData.delete(id);
-
       res.json({
-        success: true,
         message: 'Sensor data deleted successfully'
       });
     } catch (error) {
       console.error('Error deleting sensor data:', error);
       res.status(500).json({
-        success: false,
-        message: 'Internal server error',
-        error: error.message
+        error: 'Internal server error'
       });
     }
   }
 }
-
 module.exports = SensorDataController;
