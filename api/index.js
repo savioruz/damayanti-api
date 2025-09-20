@@ -34,11 +34,6 @@ if (process.env.NODE_ENV !== 'test') {
 
 // Swagger Documentation - CDN assets for Vercel compatibility
 const swaggerOptions = {
-  customCssUrl: 'https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui.css',
-  customJs: [
-    'https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui-bundle.js',
-    'https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui-standalone-preset.js'
-  ],
   explorer: false,
   customCss: '.swagger-ui .topbar { display: none }',
   customSiteTitle: 'Damayanti API Documentation'
@@ -46,10 +41,6 @@ const swaggerOptions = {
 
 app.use('/api-docs', swaggerUi.serve);
 app.get('/api-docs', swaggerUi.setup(swaggerSpec, swaggerOptions));
-
-// Alternative swagger endpoint  
-app.use('/swagger', swaggerUi.serve);
-app.get('/swagger', swaggerUi.setup(swaggerSpec, swaggerOptions));
 
 // Swagger JSON endpoint
 app.get('/doc.json', (req, res) => {

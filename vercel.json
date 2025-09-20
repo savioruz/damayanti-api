@@ -10,6 +10,18 @@
     {
       "src": "/(.*)",
       "dest": "api/index.js"
+    },
+    {
+      "src": "/api-docs/swagger-ui.css",
+      "dest": "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.29.0/swagger-ui.min.css"
+    },
+    {
+      "src": "/api-docs/swagger-ui-bundle.js",
+      "dest": "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.29.0/swagger-ui-bundle.min.js"
+    },
+    {
+      "src": "/api-docs/swagger-ui-standalone-preset.js",
+      "dest": "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.29.0/swagger-ui-standalone-preset.min.js"
     }
   ]
 }
