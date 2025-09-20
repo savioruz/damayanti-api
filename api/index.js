@@ -32,24 +32,20 @@ if (process.env.NODE_ENV !== 'test') {
   app.use(morgan('combined'));
 }
 
-// Swagger Documentation
-const swaggerOptions = {
-  explorer: true,
-  customCss: '.swagger-ui .topbar { display: none }',
-  customSiteTitle: 'Damayanti API Documentation',
-  customCssUrl: null,
-  swaggerOptions: {
-    persistAuthorization: true,
-    displayRequestDuration: true,
-    docExpansion: 'none',
-    filter: true,
-    showExtensions: true,
-    showCommonExtensions: true
-  }
-};
-
+// Serve swagger UI static assets explicitly
 app.use('/api-docs', swaggerUi.serve);
-app.get('/api-docs', swaggerUi.setup(swaggerSpec, swaggerOptions));
+
+// Swagger Documentation with proper asset serving
+app.get('/api-docs', (req, res, next) => {
+  swaggerUi.setup(swaggerSpec, {
+    explorer: false,
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Damayanti API Documentation',
+    swaggerOptions: {
+      url: '/doc.json'
+    }
+  })(req, res, next);
+});
 
 // Swagger JSON endpoint
 app.get('/doc.json', (req, res) => {
