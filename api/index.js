@@ -4,6 +4,8 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const swaggerUi = require('swagger-ui-express');
 require('dotenv').config();
+const fs = require('fs');
+const path = require('path');
 
 // Import routes and middleware from src directory
 const apiRoutes = require('../src/routes');
@@ -32,19 +34,20 @@ if (process.env.NODE_ENV !== 'test') {
   app.use(morgan('combined'));
 }
 
+const css = fs.readFileSync(
+  path.resolve(__dirname, '../node_modules/swagger-ui-dist/swagger-ui.css'),
+  'utf8'
+);
+
 // Swagger Documentation - CDN assets for Vercel compatibility
 const swaggerOptions = {
   explorer: false,
   customCss: '.swagger-ui .topbar { display: none }',
   customSiteTitle: 'Damayanti API Documentation',
-  customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.29.0/swagger-ui.min.css',
-  customJs: [
-    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.29.0/swagger-ui-bundle.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.29.0/swagger-ui-standalone-preset.min.js'
-  ]
+  customCss: css
 };
 
-app.use('/api-docs', swaggerUi.serve);
+app.use('/api-docs', express.static('node_modules/swagger-ui-dist'), swaggerUi.serve);
 app.get('/api-docs', swaggerUi.setup(swaggerSpec, swaggerOptions));
 
 // Swagger JSON endpoint
