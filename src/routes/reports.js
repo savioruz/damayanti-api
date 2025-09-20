@@ -89,8 +89,7 @@ router.get('/:id', optionalAuth, ReportController.getById);
  *   post:
  *     summary: Create a new report
  *     tags: [Reports]
- *     security:
- *       - bearerAuth: []
+ *     security: []
  *     requestBody:
  *       required: true
  *       content:
@@ -115,7 +114,7 @@ router.get('/:id', optionalAuth, ReportController.getById);
  *       500:
  *         description: Internal server error
  */
-router.post('/', authMiddleware, validateReport, ReportController.create);
+router.post('/', validateReport, ReportController.create);
 
 /**
  * @swagger
@@ -123,8 +122,7 @@ router.post('/', authMiddleware, validateReport, ReportController.create);
  *   put:
  *     summary: Update report by ID
  *     tags: [Reports]
- *     security:
- *       - bearerAuth: []
+ *     security: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -164,7 +162,7 @@ router.post('/', authMiddleware, validateReport, ReportController.create);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', authMiddleware, validateReportUpdate, ReportController.update);
+router.put('/:id', validateReportUpdate, ReportController.update);
 
 /**
  * @swagger
@@ -172,8 +170,7 @@ router.put('/:id', authMiddleware, validateReportUpdate, ReportController.update
  *   delete:
  *     summary: Delete report by ID
  *     tags: [Reports]
- *     security:
- *       - bearerAuth: []
+ *     security: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -196,6 +193,6 @@ router.put('/:id', authMiddleware, validateReportUpdate, ReportController.update
  *       500:
  *         description: Internal server error
  */
-router.delete('/:id', authMiddleware, ReportController.delete);
+router.delete('/:id', ReportController.delete);
 
 module.exports = router;

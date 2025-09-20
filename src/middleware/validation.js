@@ -58,6 +58,14 @@ const reportUpdateSchema = Joi.object({
   notes: Joi.string().allow('').optional()
 }).min(1);
 
+const studentSchema = Joi.object({
+  full_name: Joi.string().min(2).max(255).required()
+});
+
+const studentUpdateSchema = Joi.object({
+  full_name: Joi.string().min(2).max(255).optional()
+}).min(1);
+
 const sheepSchema = Joi.object({
   name: Joi.string().min(1).max(255).required(),
   age: Joi.number().integer().min(0).optional()
@@ -223,6 +231,28 @@ const validateSheepReportUpdate = (req, res, next) => {
   next();
 };
 
+const validateStudent = (req, res, next) => {
+  const { error } = studentSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({
+      error: 'Validation error',
+      details: error.details.map(detail => detail.message)
+    });
+  }
+  next();
+};
+
+const validateStudentUpdate = (req, res, next) => {
+  const { error } = studentUpdateSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({
+      error: 'Validation error',
+      details: error.details.map(detail => detail.message)
+    });
+  }
+  next();
+};
+
 module.exports = {
   validateUser,
   validateUserUpdate,
@@ -235,5 +265,7 @@ module.exports = {
   validateSheep,
   validateSheepUpdate,
   validateSheepReport,
-  validateSheepReportUpdate
+  validateSheepReportUpdate,
+  validateStudent,
+  validateStudentUpdate
 };

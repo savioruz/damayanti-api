@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS sensor_data (
     humidity DECIMAL(5, 2) NOT NULL,
     gas DECIMAL(5, 2) NOT NULL,
     ph DECIMAL(5, 2) NOT NULL,
-    user_id VARCHAR(36) NOT NULL,
+    student_id VARCHAR(36) NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     modified_at TIMESTAMPTZ DEFAULT NOW(),
     created_by VARCHAR(36) NOT NULL,
@@ -17,5 +17,5 @@ ADD CONSTRAINT fk_container FOREIGN KEY (container_id) REFERENCES containers(id)
 ON UPDATE CASCADE ON DELETE RESTRICT;
 
 ALTER TABLE sensor_data
-ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id)
+ADD CONSTRAINT fk_student FOREIGN KEY (student_id) REFERENCES students(id)
 ON UPDATE CASCADE ON DELETE RESTRICT;

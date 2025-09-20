@@ -135,8 +135,7 @@ router.get('/:id', optionalAuth, SensorDataController.getById);
  *   post:
  *     summary: Create new sensor data record
  *     tags: [Sensor Data]
- *     security:
- *       - bearerAuth: []
+ *     security: []
  *     requestBody:
  *       required: true
  *       content:
@@ -164,7 +163,7 @@ router.get('/:id', optionalAuth, SensorDataController.getById);
  *       500:
  *         description: Internal server error
  */
-router.post('/', authMiddleware, validateSensorData, SensorDataController.create);
+router.post('/', validateSensorData, SensorDataController.create);
 
 /**
  * @swagger
@@ -172,8 +171,7 @@ router.post('/', authMiddleware, validateSensorData, SensorDataController.create
  *   put:
  *     summary: Update sensor data by ID
  *     tags: [Sensor Data]
- *     security:
- *       - bearerAuth: []
+ *     security: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -223,7 +221,7 @@ router.post('/', authMiddleware, validateSensorData, SensorDataController.create
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', authMiddleware, validateSensorDataUpdate, SensorDataController.update);
+router.put('/:id', validateSensorDataUpdate, SensorDataController.update);
 
 /**
  * @swagger
@@ -231,8 +229,7 @@ router.put('/:id', authMiddleware, validateSensorDataUpdate, SensorDataControlle
  *   delete:
  *     summary: Delete sensor data by ID
  *     tags: [Sensor Data]
- *     security:
- *       - bearerAuth: []
+ *     security: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -255,6 +252,6 @@ router.put('/:id', authMiddleware, validateSensorDataUpdate, SensorDataControlle
  *       500:
  *         description: Internal server error
  */
-router.delete('/:id', authMiddleware, SensorDataController.delete);
+router.delete('/:id', SensorDataController.delete);
 
 module.exports = router;

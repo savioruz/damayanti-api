@@ -7,6 +7,7 @@ const sensorDataRoutes = require('./sensorData');
 const reportRoutes = require('./reports');
 const sheepRoutes = require('./sheeps');
 const sheepReportRoutes = require('./sheepReports');
+const studentRoutes = require('./students');
 
 const router = express.Router();
 
@@ -50,6 +51,7 @@ router.get('/health', async (req, res) => {
 // API routes
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
+router.use('/students', studentRoutes);
 router.use('/containers', containerRoutes);
 router.use('/sensor-data', sensorDataRoutes);
 router.use('/reports', reportRoutes);

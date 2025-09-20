@@ -1,16 +1,16 @@
 const express = require('express');
-const ContainerController = require('../controllers/ContainerController');
-const { authMiddleware, optionalAuth, adminMiddleware } = require('../middleware/auth');
-const { validateContainer, validateContainerUpdate } = require('../middleware/validation');
+const StudentController = require('../controllers/StudentController');
+const { authMiddleware, adminMiddleware, optionalAuth } = require('../middleware/auth');
+const { validateStudent, validateStudentUpdate } = require('../middleware/validation');
 
 const router = express.Router();
 
 /**
  * @swagger
- * /api/containers:
+ * /api/students:
  *   get:
- *     summary: Get all containers with pagination
- *     tags: [Containers]
+ *     summary: Get all students with pagination
+ *     tags: [Students]
  *     security: []
  *     parameters:
  *       - in: query
@@ -18,53 +18,16 @@ const router = express.Router();
  *         schema:
  *           type: integer
  *           default: 50
- *         description: Number of containers to return
+ *         description: Number of students to return
  *       - in: query
  *         name: offset
  *         schema:
  *           type: integer
  *           default: 0
- *         description: Number of containers to skip
- *       - in: query
- *         name: user_id
- *         schema:
- *           type: string
- *           format: uuid
- *         description: Filter containers by user ID
+ *         description: Number of students to skip
  *     responses:
  *       200:
- *         description: List of containers retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/PaginatedResponse'
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- */
-router.get('/', optionalAuth, ContainerController.getAll);
-
-/**
- * @swagger
- * /api/containers/{id}:
- *   get:
- *     summary: Get container by ID
- *     tags: [Containers]
- *     security: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *         description: Container ID
- *     responses:
- *       200:
- *         description: Container retrieved successfully
+ *         description: Students retrieved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -73,9 +36,52 @@ router.get('/', optionalAuth, ContainerController.getAll);
  *                 - type: object
  *                   properties:
  *                     data:
- *                       $ref: '#/components/schemas/Container'
+ *                       type: object
+ *                       properties:
+ *                         students:
+ *                           type: array
+ *                           items:
+ *                             $ref: '#/components/schemas/Student'
+ *                         pagination:
+ *                           $ref: '#/components/schemas/Pagination'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+router.get('/', optionalAuth, StudentController.getAll);
+
+/**
+ * @swagger
+ * /api/students/{id}:
+ *   get:
+ *     summary: Get student by ID
+ *     tags: [Students]
+ *     security: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Student ID
+ *     responses:
+ *       200:
+ *         description: Student retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/SuccessResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       $ref: '#/components/schemas/Student'
  *       404:
- *         description: Container not found
+ *         description: Student not found
  *         content:
  *           application/json:
  *             schema:
@@ -87,14 +93,14 @@ router.get('/', optionalAuth, ContainerController.getAll);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.get('/:id', optionalAuth, ContainerController.getById);
+router.get('/:id', optionalAuth, StudentController.getById);
 
 /**
  * @swagger
- * /api/containers:
+ * /api/students:
  *   post:
- *     summary: Create a new container (Admin only)
- *     tags: [Containers]
+ *     summary: Create a new student (Admin only)
+ *     tags: [Students]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -102,20 +108,29 @@ router.get('/:id', optionalAuth, ContainerController.getById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Container'
+ *             type: object
+ *             required:
+ *               - full_name
+ *             properties:
+ *               full_name:
+ *                 type: string
+ *                 description: Full name of the student
  *           example:
- *             code: "CONT001"
- *             location: "Warehouse A, Section 1"
- *             user_id: "123e4567-e89b-12d3-a456-426614174000"
+ *             full_name: "John Doe"
  *     responses:
  *       201:
- *         description: Container created successfully
+ *         description: Student created successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/SuccessResponse'
+ *               allOf:
+ *                 - $ref: '#/components/schemas/MessageResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       $ref: '#/components/schemas/Student'
  *       400:
- *         description: Validation error or container code already exists
+ *         description: Validation error
  *         content:
  *           application/json:
  *             schema:
@@ -139,14 +154,14 @@ router.get('/:id', optionalAuth, ContainerController.getById);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.post('/', adminMiddleware, validateContainer, ContainerController.create);
+router.post('/', adminMiddleware, validateStudent, StudentController.create);
 
 /**
  * @swagger
- * /api/containers/{id}:
+ * /api/students/{id}:
  *   put:
- *     summary: Update container by ID (Admin only)
- *     tags: [Containers]
+ *     summary: Update student by ID (Admin only)
+ *     tags: [Students]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -156,7 +171,7 @@ router.post('/', adminMiddleware, validateContainer, ContainerController.create)
  *         schema:
  *           type: string
  *           format: uuid
- *         description: Container ID
+ *         description: Student ID
  *     requestBody:
  *       required: true
  *       content:
@@ -164,22 +179,23 @@ router.post('/', adminMiddleware, validateContainer, ContainerController.create)
  *           schema:
  *             type: object
  *             properties:
- *               code:
+ *               full_name:
  *                 type: string
- *                 maxLength: 50
- *               location:
- *                 type: string
- *                 maxLength: 100
- *               user_id:
- *                 type: string
- *                 format: uuid
+ *                 description: Full name of the student
+ *           example:
+ *             full_name: "Jane Smith"
  *     responses:
  *       200:
- *         description: Container updated successfully
+ *         description: Student updated successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/SuccessResponse'
+ *               allOf:
+ *                 - $ref: '#/components/schemas/MessageResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       $ref: '#/components/schemas/Student'
  *       400:
  *         description: Validation error
  *         content:
@@ -192,8 +208,14 @@ router.post('/', adminMiddleware, validateContainer, ContainerController.create)
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *       403:
+ *         description: Forbidden - Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  *       404:
- *         description: Container not found
+ *         description: Student not found
  *         content:
  *           application/json:
  *             schema:
@@ -205,14 +227,14 @@ router.post('/', adminMiddleware, validateContainer, ContainerController.create)
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.put('/:id', adminMiddleware, validateContainerUpdate, ContainerController.update);
+router.put('/:id', adminMiddleware, validateStudentUpdate, StudentController.update);
 
 /**
  * @swagger
- * /api/containers/{id}:
+ * /api/students/{id}:
  *   delete:
- *     summary: Delete container by ID (Admin only)
- *     tags: [Containers]
+ *     summary: Delete student by ID (Admin only)
+ *     tags: [Students]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -222,22 +244,28 @@ router.put('/:id', adminMiddleware, validateContainerUpdate, ContainerController
  *         schema:
  *           type: string
  *           format: uuid
- *         description: Container ID
+ *         description: Student ID
  *     responses:
  *       200:
- *         description: Container deleted successfully
+ *         description: Student deleted successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/SuccessResponse'
+ *               $ref: '#/components/schemas/MessageResponse'
  *       401:
  *         description: Unauthorized
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
+ *       403:
+ *         description: Forbidden - Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  *       404:
- *         description: Container not found
+ *         description: Student not found
  *         content:
  *           application/json:
  *             schema:
@@ -249,6 +277,6 @@ router.put('/:id', adminMiddleware, validateContainerUpdate, ContainerController
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.delete('/:id', adminMiddleware, ContainerController.delete);
+router.delete('/:id', adminMiddleware, StudentController.delete);
 
 module.exports = router;

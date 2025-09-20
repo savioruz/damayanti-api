@@ -103,6 +103,33 @@ const options = {
             }
           }
         },
+        Student: {
+          type: 'object',
+          required: ['full_name'],
+          properties: {
+            id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'Unique identifier for the student'
+            },
+            full_name: {
+              type: 'string',
+              minLength: 2,
+              maxLength: 255,
+              description: 'Student full name'
+            },
+            created_at: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Student creation timestamp'
+            },
+            modified_at: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Student last modification timestamp'
+            }
+          }
+        },
         Container: {
           type: 'object',
           required: ['code', 'location', 'user_id'],

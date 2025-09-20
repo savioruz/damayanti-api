@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS reports (
     id VARCHAR(36) PRIMARY KEY,
-    user_id VARCHAR(36) NOT NULL,
+    student_id VARCHAR(36) NOT NULL,
     container_id VARCHAR(36) NOT NULL,
     notes TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS reports (
 );
 
 ALTER TABLE reports
-ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id)
+ADD CONSTRAINT fk_student FOREIGN KEY (student_id) REFERENCES students(id)
 ON UPDATE CASCADE ON DELETE RESTRICT;
 
 ALTER TABLE reports
