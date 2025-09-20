@@ -378,6 +378,31 @@ const options = {
             }
           }
         },
+        Pagination: {
+          type: 'object',
+          properties: {
+            total: {
+              type: 'integer',
+              description: 'Total number of records',
+              example: 100
+            },
+            limit: {
+              type: 'integer',
+              description: 'Number of records per page',
+              example: 50
+            },
+            offset: {
+              type: 'integer',
+              description: 'Number of records skipped',
+              example: 0
+            },
+            hasMore: {
+                type: 'boolean',
+                description: 'Whether there are more records available',
+                example: true
+            }
+          }
+        },
         ErrorResponse: {
           type: 'object',
           properties: {
