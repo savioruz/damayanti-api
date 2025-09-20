@@ -2,29 +2,6 @@
 
 Express.js REST API for the Damayanti application with full CRUD operations for all database entities.
 
-## Features
-
-- ✅ Full CRUD operations for all entities (Users, Containers, Sensor Data, Reports, Sheeps, Sheep Reports)
-- ✅ JWT Authentication & Authorization
-- ✅ Input validation with Joi
-- ✅ PostgreSQL database with connection pooling
-- ✅ RESTful API design
-- ✅ Error handling middleware
-- ✅ Security middleware (Helmet, CORS)
-- ✅ Request logging
-- ✅ Environment configuration
-
-## Database Schema
-
-The API supports the following entities:
-
-- **Users**: User management with authentication
-- **Containers**: Container tracking with location and user assignment
-- **Sensor Data**: Temperature, humidity, gas, and pH readings from containers
-- **Reports**: User-generated reports for containers
-- **Sheeps**: Sheep management
-- **Sheep Reports**: Feeding time and status tracking for sheeps
-
 ## Installation
 
 1. **Clone the repository**
@@ -35,7 +12,7 @@ cd damayanti-api
 
 2. **Install dependencies**
 ```bash
-npm install
+bun install
 ```
 
 3. **Environment setup**
@@ -53,17 +30,16 @@ cp .env.example .env
 5. **Start the server**
 ```bash
 # Development
-npm run dev
+bun run dev
 
 # Production
-npm start
+bun start
 ```
 
 ## API Endpoints
 
 ### Authentication
-- `POST /api/users/auth/register` - Register new user
-- `POST /api/users/auth/login` - Login user
+- `POST /api/auth/login` - Login user
 
 ### Users
 - `GET /api/users` - Get all users (auth required)
@@ -111,76 +87,6 @@ npm start
 
 ### Utility
 - `GET /api/health` - Health check endpoint
-- `GET /` - API information and available endpoints
-
-## Query Parameters
-
-### Pagination
-Most GET endpoints support pagination:
-- `limit` - Number of records to return (default: 50)
-- `offset` - Number of records to skip (default: 0)
-
-### Filters
-- **Containers**: `user_id`
-- **Sensor Data**: `container_id`, `user_id`, `date_from`, `date_to`
-- **Reports**: `user_id`, `container_id`
-- **Sheep Reports**: `sheep_id`, `status`, `date_from`, `date_to`
-- **Sheeps**: `name` (search)
-
-## Authentication
-
-The API uses JWT tokens for authentication. Include the token in the Authorization header:
-
-```
-Authorization: Bearer <your-jwt-token>
-```
-
-## Request/Response Examples
-
-### Register User
-```bash
-POST /api/users/auth/register
-Content-Type: application/json
-
-{
-  "email": "user@example.com",
-  "password": "password123",
-  "full_name": "John Doe"
-}
-```
-
-### Create Sensor Data
-```bash
-POST /api/sensor-data
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "container_id": "123e4567-e89b-12d3-a456-426614174000",
-  "temperature": 25.5,
-  "humidity": 60.2,
-  "gas": 0.03,
-  "ph": 7.2,
-  "user_id": "123e4567-e89b-12d3-a456-426614174001"
-}
-```
-
-### Response Format
-```json
-{
-  "success": true,
-  "message": "Operation completed successfully",
-  "data": {
-    // Response data
-  },
-  "pagination": {
-    "total": 100,
-    "limit": 50,
-    "offset": 0,
-    "hasMore": true
-  }
-}
-```
 
 ## Environment Variables
 
@@ -204,36 +110,17 @@ API_VERSION=v1
 CORS_ORIGIN=*
 ```
 
-## Error Handling
-
-The API includes comprehensive error handling:
-- Validation errors (400)
-- Authentication errors (401)
-- Authorization errors (403)
-- Not found errors (404)
-- Database constraint errors (400)
-- Internal server errors (500)
-
-## Security Features
-
-- Helmet.js for security headers
-- CORS configuration
-- JWT token authentication
-- Input validation and sanitization
-- SQL injection prevention with parameterized queries
-- Password hashing with bcrypt
-
 ## Development
 
 ```bash
 # Install dependencies
-npm install
+bun install
 
 # Run in development mode with auto-reload
-npm run dev
+bun run dev
 
 # Run tests
-npm test
+bun test
 ```
 
 ## License
