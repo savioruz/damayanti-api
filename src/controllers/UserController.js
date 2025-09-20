@@ -72,18 +72,17 @@ class UserController {
         });
       }
 
-      const hashedPassword = await hashPassword(password);
-
       const userData = {
         email,
-        password: hashedPassword,
+        password, // Don't hash here, the save() method will handle it
         full_name,
         role,
         created_by: req.user?.id || null,
         modified_by: req.user?.id || null
       };
 
-      await User.create(userData);
+      const newUser = new User(userData);
+      await newUser.save();
 
       res.status(201).json({
         message: 'User created successfully',
