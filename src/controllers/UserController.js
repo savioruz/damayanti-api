@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const { comparePassword, generateToken } = require('../utils/auth');
+const { comparePassword, generateToken, hashPassword } = require('../utils/auth');
 const { USER_ROLES } = require('../constants/roles');
 
 class UserController {
