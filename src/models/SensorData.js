@@ -9,7 +9,7 @@ class SensorData {
     this.humidity = data.humidity;
     this.gas = data.gas;
     this.ph = data.ph;
-    this.user_id = data.user_id;
+    this.student_id = data.student_id;
     this.created_at = data.created_at;
     this.modified_at = data.modified_at;
     this.created_by = data.created_by;
@@ -18,10 +18,10 @@ class SensorData {
 
   static async findAll(limit = 50, offset = 0, filters = {}) {
     let queryText = `
-      SELECT sd.*, c.code as container_code, c.location as container_location, u.full_name as user_name 
+      SELECT sd.*, c.code as container_code, c.location as container_location, s.full_name as student_name 
       FROM sensor_data sd 
       LEFT JOIN containers c ON sd.container_id = c.id
-      LEFT JOIN users u ON sd.user_id = u.id
+      LEFT JOIN students s ON sd.student_id = s.id
       WHERE 1=1
     `;
     let params = [];
@@ -31,9 +31,9 @@ class SensorData {
       queryText += ` AND sd.container_id = $${paramCount++}`;
       params.push(filters.container_id);
     }
-    if (filters.user_id) {
-      queryText += ` AND sd.user_id = $${paramCount++}`;
-      params.push(filters.user_id);
+    if (filters.student_id) {
+      queryText += ` AND sd.student_id = $${paramCount++}`;
+      params.push(filters.student_id);
     }
     if (filters.date_from) {
       queryText += ` AND sd.created_at >= $${paramCount++}`;
@@ -53,10 +53,10 @@ class SensorData {
 
   static async findById(id) {
     const result = await query(
-      `SELECT sd.*, c.code as container_code, c.location as container_location, u.full_name as user_name 
+      `SELECT sd.*, c.code as container_code, c.location as container_location, s.full_name as student_name 
        FROM sensor_data sd 
        LEFT JOIN containers c ON sd.container_id = c.id
-       LEFT JOIN users u ON sd.user_id = u.id 
+       LEFT JOIN students s ON sd.student_id = s.id 
        WHERE sd.id = $1`,
       [id]
     );
@@ -65,10 +65,10 @@ class SensorData {
 
   async save() {
     const result = await query(
-      `INSERT INTO sensor_data (id, container_id, temperature, humidity, gas, ph, user_id, created_by, modified_by)
+      `INSERT INTO sensor_data (id, container_id, temperature, humidity, gas, ph, student_id, created_by, modified_by)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
        RETURNING *`,
-      [this.id, this.container_id, this.temperature, this.humidity, this.gas, this.ph, this.user_id, this.created_by, this.modified_by]
+      [this.id, this.container_id, this.temperature, this.humidity, this.gas, this.ph, this.student_id, this.created_by, this.modified_by]
     );
     return result.rows[0];
   }
@@ -98,9 +98,9 @@ class SensorData {
       updateFields.push(`ph = $${paramCount++}`);
       values.push(data.ph);
     }
-    if (data.user_id) {
-      updateFields.push(`user_id = $${paramCount++}`);
-      values.push(data.user_id);
+    if (data.student_id) {
+      updateFields.push(`student_id = $${paramCount++}`);
+      values.push(data.student_id);
     }
 
     updateFields.push(`modified_by = $${paramCount++}`);
@@ -131,9 +131,9 @@ class SensorData {
       queryText += ` AND container_id = $${paramCount++}`;
       params.push(filters.container_id);
     }
-    if (filters.user_id) {
-      queryText += ` AND user_id = $${paramCount++}`;
-      params.push(filters.user_id);
+    if (filters.student_id) {
+      queryText += ` AND student_id = $${paramCount++}`;
+      params.push(filters.student_id);
     }
 
     const result = await query(queryText, params);

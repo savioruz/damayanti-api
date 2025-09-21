@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 class Report {
   constructor(data) {
     this.id = data.id || uuidv4();
-    this.user_id = data.user_id;
+    this.student_id = data.student_id;
     this.container_id = data.container_id;
     this.notes = data.notes;
     this.created_at = data.created_at;
@@ -15,18 +15,18 @@ class Report {
 
   static async findAll(limit = 50, offset = 0, filters = {}) {
     let queryText = `
-      SELECT r.*, c.code as container_code, c.location as container_location, u.full_name as user_name 
+      SELECT r.*, c.code as container_code, c.location as container_location, s.full_name as student_name 
       FROM reports r 
       LEFT JOIN containers c ON r.container_id = c.id
-      LEFT JOIN users u ON r.user_id = u.id
+      LEFT JOIN students s ON r.student_id = s.id
       WHERE 1=1
     `;
     let params = [];
     let paramCount = 1;
 
-    if (filters.user_id) {
-      queryText += ` AND r.user_id = $${paramCount++}`;
-      params.push(filters.user_id);
+    if (filters.student_id) {
+      queryText += ` AND r.student_id = $${paramCount++}`;
+      params.push(filters.student_id);
     }
     if (filters.container_id) {
       queryText += ` AND r.container_id = $${paramCount++}`;
@@ -42,10 +42,10 @@ class Report {
 
   static async findById(id) {
     const result = await query(
-      `SELECT r.*, c.code as container_code, c.location as container_location, u.full_name as user_name 
+      `SELECT r.*, c.code as container_code, c.location as container_location, s.full_name as student_name 
        FROM reports r 
        LEFT JOIN containers c ON r.container_id = c.id
-       LEFT JOIN users u ON r.user_id = u.id 
+       LEFT JOIN students s ON r.student_id = s.id 
        WHERE r.id = $1`,
       [id]
     );
@@ -54,10 +54,10 @@ class Report {
 
   async save() {
     const result = await query(
-      `INSERT INTO reports (id, user_id, container_id, notes, created_by, modified_by)
+      `INSERT INTO reports (id, student_id, container_id, notes, created_by, modified_by)
        VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING *`,
-      [this.id, this.user_id, this.container_id, this.notes, this.created_by, this.modified_by]
+      [this.id, this.student_id, this.container_id, this.notes, this.created_by, this.modified_by]
     );
     return result.rows[0];
   }
@@ -67,9 +67,9 @@ class Report {
     const values = [];
     let paramCount = 1;
 
-    if (data.user_id) {
-      updateFields.push(`user_id = $${paramCount++}`);
-      values.push(data.user_id);
+    if (data.student_id) {
+      updateFields.push(`student_id = $${paramCount++}`);
+      values.push(data.student_id);
     }
     if (data.container_id) {
       updateFields.push(`container_id = $${paramCount++}`);
@@ -104,9 +104,9 @@ class Report {
     let params = [];
     let paramCount = 1;
 
-    if (filters.user_id) {
-      queryText += ` AND user_id = $${paramCount++}`;
-      params.push(filters.user_id);
+    if (filters.student_id) {
+      queryText += ` AND student_id = $${paramCount++}`;
+      params.push(filters.student_id);
     }
     if (filters.container_id) {
       queryText += ` AND container_id = $${paramCount++}`;
