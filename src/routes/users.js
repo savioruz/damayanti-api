@@ -1,7 +1,7 @@
 const express = require('express');
 const UserController = require('../controllers/UserController');
 const { adminMiddleware } = require('../middleware/auth');
-const { validateUser, validateUserUpdate } = require('../middleware/validation');
+const { validateUser, validateUserUpdate, validateUuidParam, validatePagination } = require('../middleware/validation');
 
 const router = express.Router();
 
@@ -52,7 +52,7 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.get('/', adminMiddleware, UserController.getAll);
+router.get('/', adminMiddleware, validatePagination, UserController.getAll);
 
 /**
  * @swagger
@@ -107,7 +107,7 @@ router.get('/', adminMiddleware, UserController.getAll);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.get('/:id', adminMiddleware, UserController.getById);
+router.get('/:id', adminMiddleware, validateUuidParam, UserController.getById);
 
 /**
  * @swagger
@@ -255,7 +255,7 @@ router.post('/', adminMiddleware, validateUser, UserController.create);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.put('/:id', adminMiddleware, validateUserUpdate, UserController.update);
+router.put('/:id', adminMiddleware, validateUuidParam, validateUserUpdate, UserController.update);
 
 /**
  * @swagger
@@ -305,6 +305,6 @@ router.put('/:id', adminMiddleware, validateUserUpdate, UserController.update);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.delete('/:id', adminMiddleware, UserController.delete);
+router.delete('/:id', adminMiddleware, validateUuidParam, UserController.delete);
 
 module.exports = router;

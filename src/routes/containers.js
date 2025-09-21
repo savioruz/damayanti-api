@@ -1,7 +1,7 @@
 const express = require('express');
 const ContainerController = require('../controllers/ContainerController');
 const { authMiddleware, optionalAuth, adminMiddleware } = require('../middleware/auth');
-const { validateContainer, validateContainerUpdate } = require('../middleware/validation');
+const { validateContainer, validateContainerUpdate, validateUuidParam, validatePagination } = require('../middleware/validation');
 
 const router = express.Router();
 
@@ -45,7 +45,7 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.get('/', optionalAuth, ContainerController.getAll);
+router.get('/', optionalAuth, validatePagination, ContainerController.getAll);
 
 /**
  * @swagger
@@ -87,7 +87,7 @@ router.get('/', optionalAuth, ContainerController.getAll);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.get('/:id', optionalAuth, ContainerController.getById);
+router.get('/:id', optionalAuth, validateUuidParam, ContainerController.getById);
 
 /**
  * @swagger
@@ -205,7 +205,7 @@ router.post('/', adminMiddleware, validateContainer, ContainerController.create)
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.put('/:id', adminMiddleware, validateContainerUpdate, ContainerController.update);
+router.put('/:id', adminMiddleware, validateUuidParam, validateContainerUpdate, ContainerController.update);
 
 /**
  * @swagger
@@ -249,6 +249,6 @@ router.put('/:id', adminMiddleware, validateContainerUpdate, ContainerController
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.delete('/:id', adminMiddleware, ContainerController.delete);
+router.delete('/:id', adminMiddleware, validateUuidParam, ContainerController.delete);
 
 module.exports = router;

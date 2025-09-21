@@ -1,7 +1,7 @@
 const express = require('express');
 const ReportController = require('../controllers/ReportController');
 const { authMiddleware, optionalAuth } = require('../middleware/auth');
-const { validateReport, validateReportUpdate } = require('../middleware/validation');
+const { validateReport, validateReportUpdate, validateUuidParam, validatePagination } = require('../middleware/validation');
 
 const router = express.Router();
 
@@ -47,7 +47,7 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.get('/', optionalAuth, ReportController.getAll);
+router.get('/', optionalAuth, validatePagination, ReportController.getAll);
 
 /**
  * @swagger
@@ -81,7 +81,7 @@ router.get('/', optionalAuth, ReportController.getAll);
  *       500:
  *         description: Internal server error
  */
-router.get('/:id', optionalAuth, ReportController.getById);
+router.get('/:id', optionalAuth, validateUuidParam, ReportController.getById);
 
 /**
  * @swagger
@@ -162,7 +162,7 @@ router.post('/', validateReport, ReportController.create);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', validateReportUpdate, ReportController.update);
+router.put('/:id', validateUuidParam, validateReportUpdate, ReportController.update);
 
 /**
  * @swagger
@@ -193,6 +193,6 @@ router.put('/:id', validateReportUpdate, ReportController.update);
  *       500:
  *         description: Internal server error
  */
-router.delete('/:id', ReportController.delete);
+router.delete('/:id', validateUuidParam, ReportController.delete);
 
 module.exports = router;

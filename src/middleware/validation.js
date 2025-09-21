@@ -19,13 +19,13 @@ const userUpdateSchema = Joi.object({
 const containerSchema = Joi.object({
   code: Joi.string().min(1).max(50).required(),
   location: Joi.string().min(1).max(100).required(),
-  user_id: Joi.string().uuid().required()
+  student_id: Joi.string().uuid().required()
 });
 
 const containerUpdateSchema = Joi.object({
   code: Joi.string().min(1).max(50).optional(),
   location: Joi.string().min(1).max(100).optional(),
-  user_id: Joi.string().uuid().optional()
+  student_id: Joi.string().uuid().optional()
 }).min(1);
 
 const sensorDataSchema = Joi.object({
@@ -34,7 +34,7 @@ const sensorDataSchema = Joi.object({
   humidity: Joi.number().precision(2).required(),
   gas: Joi.number().precision(2).required(),
   ph: Joi.number().precision(2).required(),
-  user_id: Joi.string().uuid().required()
+  student_id: Joi.string().uuid().required()
 });
 
 const sensorDataUpdateSchema = Joi.object({
@@ -43,17 +43,17 @@ const sensorDataUpdateSchema = Joi.object({
   humidity: Joi.number().precision(2).optional(),
   gas: Joi.number().precision(2).optional(),
   ph: Joi.number().precision(2).optional(),
-  user_id: Joi.string().uuid().optional()
+  student_id: Joi.string().uuid().optional()
 }).min(1);
 
 const reportSchema = Joi.object({
-  user_id: Joi.string().uuid().required(),
+  student_id: Joi.string().uuid().required(),
   container_id: Joi.string().uuid().required(),
   notes: Joi.string().allow('').optional()
 });
 
 const reportUpdateSchema = Joi.object({
-  user_id: Joi.string().uuid().optional(),
+  student_id: Joi.string().uuid().optional(),
   container_id: Joi.string().uuid().optional(),
   notes: Joi.string().allow('').optional()
 }).min(1);
@@ -88,6 +88,16 @@ const sheepReportUpdateSchema = Joi.object({
   status: Joi.string().min(1).max(50).optional()
 }).min(1);
 
+// Parameter validation schemas
+const uuidParamSchema = Joi.object({
+  id: Joi.string().uuid().required()
+});
+
+const paginationSchema = Joi.object({
+  limit: Joi.number().integer().min(1).max(100).optional().default(50),
+  offset: Joi.number().integer().min(0).optional().default(0)
+});
+
 // Validation middleware functions
 const validateUser = (req, res, next) => {
   const { error } = userSchema.validate(req.body);
@@ -103,9 +113,7 @@ const validateUserUpdate = (req, res, next) => {
   const { error } = userUpdateSchema.validate(req.body);
   if (error) {
     return res.status(400).json({
-      success: false,
-      message: 'Validation error',
-      details: error.details.map(detail => detail.message)
+      error: error.details.map(detail => detail.message).join(', ')
     });
   }
   next();
@@ -115,9 +123,7 @@ const validateContainer = (req, res, next) => {
   const { error } = containerSchema.validate(req.body);
   if (error) {
     return res.status(400).json({
-      success: false,
-      message: 'Validation error',
-      details: error.details.map(detail => detail.message)
+      error: error.details.map(detail => detail.message).join(', ')
     });
   }
   next();
@@ -127,9 +133,7 @@ const validateContainerUpdate = (req, res, next) => {
   const { error } = containerUpdateSchema.validate(req.body);
   if (error) {
     return res.status(400).json({
-      success: false,
-      message: 'Validation error',
-      details: error.details.map(detail => detail.message)
+      error: error.details.map(detail => detail.message).join(', ')
     });
   }
   next();
@@ -139,9 +143,7 @@ const validateSensorData = (req, res, next) => {
   const { error } = sensorDataSchema.validate(req.body);
   if (error) {
     return res.status(400).json({
-      success: false,
-      message: 'Validation error',
-      details: error.details.map(detail => detail.message)
+      error: error.details.map(detail => detail.message).join(', ')
     });
   }
   next();
@@ -151,9 +153,7 @@ const validateSensorDataUpdate = (req, res, next) => {
   const { error } = sensorDataUpdateSchema.validate(req.body);
   if (error) {
     return res.status(400).json({
-      success: false,
-      message: 'Validation error',
-      details: error.details.map(detail => detail.message)
+      error: error.details.map(detail => detail.message).join(', ')
     });
   }
   next();
@@ -163,9 +163,7 @@ const validateReport = (req, res, next) => {
   const { error } = reportSchema.validate(req.body);
   if (error) {
     return res.status(400).json({
-      success: false,
-      message: 'Validation error',
-      details: error.details.map(detail => detail.message)
+      error: error.details.map(detail => detail.message).join(', ')
     });
   }
   next();
@@ -175,9 +173,7 @@ const validateReportUpdate = (req, res, next) => {
   const { error } = reportUpdateSchema.validate(req.body);
   if (error) {
     return res.status(400).json({
-      success: false,
-      message: 'Validation error',
-      details: error.details.map(detail => detail.message)
+      error: error.details.map(detail => detail.message).join(', ')
     });
   }
   next();
@@ -187,9 +183,7 @@ const validateSheep = (req, res, next) => {
   const { error } = sheepSchema.validate(req.body);
   if (error) {
     return res.status(400).json({
-      success: false,
-      message: 'Validation error',
-      details: error.details.map(detail => detail.message)
+      error: error.details.map(detail => detail.message).join(', ')
     });
   }
   next();
@@ -199,9 +193,7 @@ const validateSheepUpdate = (req, res, next) => {
   const { error } = sheepUpdateSchema.validate(req.body);
   if (error) {
     return res.status(400).json({
-      success: false,
-      message: 'Validation error',
-      details: error.details.map(detail => detail.message)
+      error: error.details.map(detail => detail.message).join(', ')
     });
   }
   next();
@@ -211,9 +203,7 @@ const validateSheepReport = (req, res, next) => {
   const { error } = sheepReportSchema.validate(req.body);
   if (error) {
     return res.status(400).json({
-      success: false,
-      message: 'Validation error',
-      details: error.details.map(detail => detail.message)
+      error: error.details.map(detail => detail.message).join(', ')
     });
   }
   next();
@@ -223,9 +213,7 @@ const validateSheepReportUpdate = (req, res, next) => {
   const { error } = sheepReportUpdateSchema.validate(req.body);
   if (error) {
     return res.status(400).json({
-      success: false,
-      message: 'Validation error',
-      details: error.details.map(detail => detail.message)
+      error: error.details.map(detail => detail.message).join(', ')
     });
   }
   next();
@@ -235,8 +223,7 @@ const validateStudent = (req, res, next) => {
   const { error } = studentSchema.validate(req.body);
   if (error) {
     return res.status(400).json({
-      error: 'Validation error',
-      details: error.details.map(detail => detail.message)
+      error: error.details.map(detail => detail.message).join(', ')
     });
   }
   next();
@@ -246,10 +233,31 @@ const validateStudentUpdate = (req, res, next) => {
   const { error } = studentUpdateSchema.validate(req.body);
   if (error) {
     return res.status(400).json({
-      error: 'Validation error',
-      details: error.details.map(detail => detail.message)
+      error: error.details.map(detail => detail.message).join(', ')
     });
   }
+  next();
+};
+
+// Parameter validation middleware
+const validateUuidParam = (req, res, next) => {
+  const { error } = uuidParamSchema.validate(req.params);
+  if (error) {
+    return res.status(400).json({
+      error: error.details.map(detail => detail.message).join(', ')
+    });
+  }
+  next();
+};
+
+const validatePagination = (req, res, next) => {
+  const { error, value } = paginationSchema.validate(req.query);
+  if (error) {
+    return res.status(400).json({
+      error: error.details.map(detail => detail.message).join(', ')
+    });
+  }
+  req.query = { ...req.query, ...value };
   next();
 };
 
@@ -267,5 +275,7 @@ module.exports = {
   validateSheepReport,
   validateSheepReportUpdate,
   validateStudent,
-  validateStudentUpdate
+  validateStudentUpdate,
+  validateUuidParam,
+  validatePagination
 };

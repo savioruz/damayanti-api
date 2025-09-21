@@ -1,7 +1,7 @@
 const express = require('express');
 const SensorDataController = require('../controllers/SensorDataController');
 const { authMiddleware, optionalAuth } = require('../middleware/auth');
-const { validateSensorData, validateSensorDataUpdate } = require('../middleware/validation');
+const { validateSensorData, validateSensorDataUpdate, validateUuidParam, validatePagination } = require('../middleware/validation');
 
 const router = express.Router();
 
@@ -59,7 +59,7 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.get('/', optionalAuth, SensorDataController.getAll);
+router.get('/', optionalAuth, validatePagination, SensorDataController.getAll);
 
 /**
  * @swagger
@@ -93,7 +93,7 @@ router.get('/', optionalAuth, SensorDataController.getAll);
  *       500:
  *         description: Internal server error
  */
-router.get('/latest/:container_id', optionalAuth, SensorDataController.getLatestByContainer);
+router.get('/latest/:container_id', optionalAuth, validateUuidParam, SensorDataController.getLatestByContainer);
 
 /**
  * @swagger
@@ -127,7 +127,7 @@ router.get('/latest/:container_id', optionalAuth, SensorDataController.getLatest
  *       500:
  *         description: Internal server error
  */
-router.get('/:id', optionalAuth, SensorDataController.getById);
+router.get('/:id', optionalAuth, validateUuidParam, SensorDataController.getById);
 
 /**
  * @swagger
@@ -221,7 +221,7 @@ router.post('/', validateSensorData, SensorDataController.create);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', validateSensorDataUpdate, SensorDataController.update);
+router.put('/:id', validateUuidParam, validateSensorDataUpdate, SensorDataController.update);
 
 /**
  * @swagger
@@ -252,6 +252,6 @@ router.put('/:id', validateSensorDataUpdate, SensorDataController.update);
  *       500:
  *         description: Internal server error
  */
-router.delete('/:id', SensorDataController.delete);
+router.delete('/:id', validateUuidParam, SensorDataController.delete);
 
 module.exports = router;

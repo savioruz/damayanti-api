@@ -1,7 +1,7 @@
 const express = require('express');
 const SheepReportController = require('../controllers/SheepReportController');
 const { authMiddleware, optionalAuth } = require('../middleware/auth');
-const { validateSheepReport, validateSheepReportUpdate } = require('../middleware/validation');
+const { validateSheepReport, validateSheepReportUpdate, validateUuidParam, validatePagination } = require('../middleware/validation');
 
 const router = express.Router();
 
@@ -46,7 +46,7 @@ const router = express.Router();
  *       200:
  *         description: List of sheep reports retrieved successfully
  */
-router.get('/', optionalAuth, SheepReportController.getAll);
+router.get('/', optionalAuth, validatePagination, SheepReportController.getAll);
 
 /**
  * @swagger
@@ -92,7 +92,7 @@ router.get('/recent/:status', optionalAuth, SheepReportController.getRecentBySta
  *       404:
  *         description: Sheep report not found
  */
-router.get('/:id', optionalAuth, SheepReportController.getById);
+router.get('/:id', optionalAuth, validateUuidParam, SheepReportController.getById);
 
 /**
  * @swagger
@@ -160,7 +160,7 @@ router.post('/', authMiddleware, validateSheepReport, SheepReportController.crea
  *       404:
  *         description: Sheep report not found
  */
-router.put('/:id', authMiddleware, validateSheepReportUpdate, SheepReportController.update);
+router.put('/:id', authMiddleware, validateUuidParam, validateSheepReportUpdate, SheepReportController.update);
 
 /**
  * @swagger
@@ -185,6 +185,6 @@ router.put('/:id', authMiddleware, validateSheepReportUpdate, SheepReportControl
  *       404:
  *         description: Sheep report not found
  */
-router.delete('/:id', authMiddleware, SheepReportController.delete);
+router.delete('/:id', authMiddleware, validateUuidParam, SheepReportController.delete);
 
 module.exports = router;
