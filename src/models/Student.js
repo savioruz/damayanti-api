@@ -11,11 +11,23 @@ class Student {
     this.modified_by = data.modified_by || this.id;
   }
 
-  static async findAll(limit = 50, offset = 0) {
-    const result = await query(
-      'SELECT id, full_name, created_at, modified_at FROM students ORDER BY created_at DESC LIMIT $1 OFFSET $2',
-      [limit, offset]
-    );
+  static async findAll(limit = 50, offset = 0, full_name = null) {
+    let sql = 'SELECT id, full_name, created_at, modified_at FROM students';
+    let params = [];
+    let paramCount = 1;
+
+    if (full_name) {
+      sql += ' WHERE full_name ILIKE $' + paramCount++;
+      params.push(`%${full_name}%`);
+    }
+
+    sql += ' ORDER BY created_at DESC LIMIT $' + paramCount++;
+    params.push(limit);
+    
+    sql += ' OFFSET $' + paramCount;
+    params.push(offset);
+
+    const result = await query(sql, params);
     return result.rows;
   }
 
@@ -66,8 +78,16 @@ class Student {
     return result.rows[0];
   }
 
-  static async count() {
-    const result = await query('SELECT COUNT(*) FROM students');
+  static async count(full_name = null) {
+    let sql = 'SELECT COUNT(*) FROM students';
+    let params = [];
+
+    if (full_name) {
+      sql += ' WHERE full_name ILIKE $1';
+      params.push(`%${full_name}%`);
+    }
+
+    const result = await query(sql, params);
     return parseInt(result.rows[0].count);
   }
 }

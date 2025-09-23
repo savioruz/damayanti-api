@@ -25,6 +25,11 @@ const router = express.Router();
  *           type: integer
  *           default: 0
  *         description: Number of students to skip
+ *       - in: query
+ *         name: full_name
+ *         schema:
+ *           type: string
+ *         description: Filter students by full name (case-insensitive partial match)
  *     responses:
  *       200:
  *         description: Students retrieved successfully

@@ -3,9 +3,9 @@ class StudentController {
   // GET /api/students
   static async getAll(req, res) {
     try {
-      const { limit = 50, offset = 0 } = req.query;
-      const students = await Student.findAll(parseInt(limit), parseInt(offset));
-      const total = await Student.count();
+      const { limit = 50, offset = 0, full_name = null } = req.query;
+      const students = await Student.findAll(parseInt(limit), parseInt(offset), full_name);
+      const total = await Student.count(full_name);
       res.json({
         data: {
           students,
