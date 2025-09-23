@@ -26,7 +26,7 @@ const router = express.Router();
  *           default: 0
  *         description: Number of containers to skip
  *       - in: query
- *         name: user_id
+ *         name: student_id
  *         schema:
  *           type: string
  *           format: uuid
@@ -106,7 +106,7 @@ router.get('/:id', optionalAuth, validateUuidParam, ContainerController.getById)
  *           example:
  *             code: "CONT001"
  *             location: "Warehouse A, Section 1"
- *             user_id: "123e4567-e89b-12d3-a456-426614174000"
+ *             student_id: "123e4567-e89b-12d3-a456-426614174000"
  *     responses:
  *       201:
  *         description: Container created successfully
@@ -170,7 +170,7 @@ router.post('/', adminMiddleware, validateContainer, ContainerController.create)
  *               location:
  *                 type: string
  *                 maxLength: 100
- *               user_id:
+ *               student_id:
  *                 type: string
  *                 format: uuid
  *     responses:

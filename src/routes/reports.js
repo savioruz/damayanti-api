@@ -26,7 +26,7 @@ const router = express.Router();
  *           default: 0
  *         description: Number of reports to skip
  *       - in: query
- *         name: user_id
+ *         name: student_id
  *         schema:
  *           type: string
  *           format: uuid
@@ -97,7 +97,7 @@ router.get('/:id', optionalAuth, validateUuidParam, ReportController.getById);
  *           schema:
  *             $ref: '#/components/schemas/Report'
  *           example:
- *             user_id: "123e4567-e89b-12d3-a456-426614174000"
+ *             student_id: "123e4567-e89b-12d3-a456-426614174000"
  *             container_id: "123e4567-e89b-12d3-a456-426614174001"
  *             notes: "Container inspection completed. All systems normal."
  *     responses:
@@ -138,7 +138,7 @@ router.post('/', validateReport, ReportController.create);
  *           schema:
  *             type: object
  *             properties:
- *               user_id:
+ *               student_id:
  *                 type: string
  *                 format: uuid
  *               container_id:

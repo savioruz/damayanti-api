@@ -32,7 +32,7 @@ const router = express.Router();
  *           format: uuid
  *         description: Filter by container ID
  *       - in: query
- *         name: user_id
+ *         name: student_id
  *         schema:
  *           type: string
  *           format: uuid
@@ -148,7 +148,7 @@ router.get('/:id', optionalAuth, validateUuidParam, SensorDataController.getById
  *             humidity: 60.2
  *             gas: 0.03
  *             ph: 7.2
- *             user_id: "123e4567-e89b-12d3-a456-426614174001"
+ *             student_id: "123e4567-e89b-12d3-a456-426614174001"
  *     responses:
  *       201:
  *         description: Sensor data created successfully
@@ -202,7 +202,7 @@ router.post('/', validateSensorData, SensorDataController.create);
  *               ph:
  *                 type: number
  *                 format: decimal
- *               user_id:
+ *               student_id:
  *                 type: string
  *                 format: uuid
  *     responses:
