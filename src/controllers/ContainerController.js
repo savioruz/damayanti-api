@@ -3,9 +3,9 @@ class ContainerController {
   // GET /api/containers
   static async getAll(req, res) {
     try {
-      const { limit = 50, offset = 0, user_id } = req.query;
-      const containers = await Container.findAll(parseInt(limit), parseInt(offset), user_id);
-      const total = await Container.count(user_id);
+      const { limit = 50, offset = 0, student_id } = req.query;
+      const containers = await Container.findAll(parseInt(limit), parseInt(offset), student_id);
+      const total = await Container.count(student_id);
       res.json({
         data: containers,
         pagination: {
@@ -45,7 +45,7 @@ class ContainerController {
   // POST /api/containers
   static async create(req, res) {
     try {
-      const { code, location, user_id } = req.body;
+      const { code, location, student_id } = req.body;
       // Check if container code already exists
       const existingContainer = await Container.findByCode(code);
       if (existingContainer) {
@@ -56,9 +56,9 @@ class ContainerController {
       const containerData = {
         code,
         location,
-        user_id,
-        created_by: req.user?.id || user_id,
-        modified_by: req.user?.id || user_id
+        student_id,
+        created_by: req.user?.id || student_id,
+        modified_by: req.user?.id || student_id
       };
       const container = new Container(containerData);
       await container.save();
@@ -76,7 +76,7 @@ class ContainerController {
   static async update(req, res) {
     try {
       const { id } = req.params;
-      const { code, location, user_id } = req.body;
+      const { code, location, student_id } = req.body;
       const existingContainer = await Container.findById(id);
       if (!existingContainer) {
         return res.status(404).json({
@@ -95,7 +95,7 @@ class ContainerController {
       const updateData = {};
       if (code) updateData.code = code;
       if (location) updateData.location = location;
-      if (user_id) updateData.user_id = user_id;
+      if (student_id) updateData.student_id = student_id;
       await Container.update(id, updateData, req.user?.id || existingContainer.modified_by);
       res.json({
         message: 'Container updated successfully'

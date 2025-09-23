@@ -7,13 +7,13 @@ class SensorDataController {
         limit = 50, 
         offset = 0, 
         container_id, 
-        user_id, 
+        student_id, 
         date_from, 
         date_to 
       } = req.query;
       const filters = {};
       if (container_id) filters.container_id = container_id;
-      if (user_id) filters.user_id = user_id;
+      if (student_id) filters.student_id = student_id;
       if (date_from) filters.date_from = date_from;
       if (date_to) filters.date_to = date_to;
       const sensorData = await SensorData.findAll(parseInt(limit), parseInt(offset), filters);
@@ -77,16 +77,16 @@ class SensorDataController {
   // POST /api/sensor-data
   static async create(req, res) {
     try {
-      const { container_id, temperature, humidity, gas, ph, user_id } = req.body;
+      const { container_id, temperature, humidity, gas, ph, student_id } = req.body;
       const sensorDataObj = {
         container_id,
         temperature,
         humidity,
         gas,
         ph,
-        user_id,
-        created_by: req.user?.id || user_id,
-        modified_by: req.user?.id || user_id
+        student_id,
+        created_by: req.user?.id || student_id,
+        modified_by: req.user?.id || student_id
       };
       const sensorData = new SensorData(sensorDataObj);
       await sensorData.save();
@@ -104,7 +104,7 @@ class SensorDataController {
   static async update(req, res) {
     try {
       const { id } = req.params;
-      const { container_id, temperature, humidity, gas, ph, user_id } = req.body;
+      const { container_id, temperature, humidity, gas, ph, student_id } = req.body;
       const existingSensorData = await SensorData.findById(id);
       if (!existingSensorData) {
         return res.status(404).json({
@@ -117,7 +117,7 @@ class SensorDataController {
       if (humidity !== undefined) updateData.humidity = humidity;
       if (gas !== undefined) updateData.gas = gas;
       if (ph !== undefined) updateData.ph = ph;
-      if (user_id) updateData.user_id = user_id;
+      if (student_id) updateData.student_id = student_id;
       await SensorData.update(id, updateData, req.user?.id || existingSensorData.modified_by);
       res.json({
         message: 'Sensor data updated successfully'

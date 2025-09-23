@@ -6,11 +6,11 @@ class ReportController {
       const { 
         limit = 50, 
         offset = 0, 
-        user_id, 
+        student_id, 
         container_id 
       } = req.query;
       const filters = {};
-      if (user_id) filters.user_id = user_id;
+      if (student_id) filters.student_id = student_id;
       if (container_id) filters.container_id = container_id;
       const reports = await Report.findAll(parseInt(limit), parseInt(offset), filters);
       const total = await Report.count(filters);
@@ -53,13 +53,13 @@ class ReportController {
   // POST /api/reports
   static async create(req, res) {
     try {
-      const { user_id, container_id, notes } = req.body;
+      const { student_id, container_id, notes } = req.body;
       const reportData = {
-        user_id,
+        student_id,
         container_id,
         notes,
-        created_by: req.user?.id || user_id,
-        modified_by: req.user?.id || user_id
+        created_by: req.user?.id || student_id,
+        modified_by: req.user?.id || student_id
       };
       const report = new Report(reportData);
       await report.save();
@@ -77,7 +77,7 @@ class ReportController {
   static async update(req, res) {
     try {
       const { id } = req.params;
-      const { user_id, container_id, notes } = req.body;
+      const { student_id, container_id, notes } = req.body;
       const existingReport = await Report.findById(id);
       if (!existingReport) {
         return res.status(404).json({
@@ -85,7 +85,7 @@ class ReportController {
         });
       }
       const updateData = {};
-      if (user_id) updateData.user_id = user_id;
+      if (student_id) updateData.student_id = student_id;
       if (container_id) updateData.container_id = container_id;
       if (notes !== undefined) updateData.notes = notes;
       await Report.update(id, updateData, req.user?.id || existingReport.modified_by);
