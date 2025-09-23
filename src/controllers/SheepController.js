@@ -14,7 +14,7 @@ class SheepController {
         total = await Sheep.count();
       }
       res.json({
-        data: sheeps,
+        sheeps,
         pagination: {
           total,
           limit: parseInt(limit),

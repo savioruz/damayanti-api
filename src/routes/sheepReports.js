@@ -45,6 +45,28 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: List of sheep reports retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/SuccessResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       type: object
+ *                       properties:
+ *                         sheepReports:
+ *                           type: array
+ *                           items:
+ *                             $ref: '#/components/schemas/SheepReport'
+ *                         pagination:
+ *                           $ref: '#/components/schemas/Pagination'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  */
 router.get('/', optionalAuth, validatePagination, SheepReportController.getAll);
 

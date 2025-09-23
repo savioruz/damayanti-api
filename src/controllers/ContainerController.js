@@ -7,7 +7,7 @@ class ContainerController {
       const containers = await Container.findAll(parseInt(limit), parseInt(offset), student_id);
       const total = await Container.count(student_id);
       res.json({
-        data: containers,
+        containers,
         pagination: {
           total,
           limit: parseInt(limit),
