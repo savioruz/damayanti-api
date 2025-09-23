@@ -15,12 +15,14 @@ class ReportController {
       const reports = await Report.findAll(parseInt(limit), parseInt(offset), filters);
       const total = await Report.count(filters);
       res.json({
-        reports,
-        pagination: {
-          total,
-          limit: parseInt(limit),
-          offset: parseInt(offset),
-          hasMore: parseInt(offset) + parseInt(limit) < total
+        data: {
+          reports,
+          pagination: {
+            total,
+            limit: parseInt(limit),
+            offset: parseInt(offset),
+            hasMore: parseInt(offset) + parseInt(limit) < total
+          }
         }
       });
     } catch (error) {

@@ -19,12 +19,14 @@ class SensorDataController {
       const sensorData = await SensorData.findAll(parseInt(limit), parseInt(offset), filters);
       const total = await SensorData.count(filters);
       res.json({
-        sensorData,
-        pagination: {
-          total,
-          limit: parseInt(limit),
-          offset: parseInt(offset),
-          hasMore: parseInt(offset) + parseInt(limit) < total
+        data: {
+          sensorData,
+          pagination: {
+            total,
+            limit: parseInt(limit),
+            offset: parseInt(offset),
+            hasMore: parseInt(offset) + parseInt(limit) < total
+          }
         }
       });
     } catch (error) {

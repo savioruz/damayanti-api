@@ -19,12 +19,14 @@ class SheepReportController {
       const sheepReports = await SheepReport.findAll(parseInt(limit), parseInt(offset), filters);
       const total = await SheepReport.count(filters);
       res.json({
-        sheepReports,
-        pagination: {
-          total,
-          limit: parseInt(limit),
-          offset: parseInt(offset),
-          hasMore: parseInt(offset) + parseInt(limit) < total
+        data: {
+          sheepReports,
+          pagination: {
+            total,
+            limit: parseInt(limit),
+            offset: parseInt(offset),
+            hasMore: parseInt(offset) + parseInt(limit) < total
+          }
         }
       });
     } catch (error) {

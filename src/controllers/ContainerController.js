@@ -7,12 +7,14 @@ class ContainerController {
       const containers = await Container.findAll(parseInt(limit), parseInt(offset), student_id);
       const total = await Container.count(student_id);
       res.json({
-        containers,
-        pagination: {
-          total,
-          limit: parseInt(limit),
-          offset: parseInt(offset),
-          hasMore: parseInt(offset) + parseInt(limit) < total
+        data: {
+          containers,
+          pagination: {
+            total,
+            limit: parseInt(limit),
+            offset: parseInt(offset),
+            hasMore: parseInt(offset) + parseInt(limit) < total
+          }
         }
       });
     } catch (error) {

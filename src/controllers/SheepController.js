@@ -14,12 +14,14 @@ class SheepController {
         total = await Sheep.count();
       }
       res.json({
-        sheeps,
-        pagination: {
-          total,
-          limit: parseInt(limit),
-          offset: parseInt(offset),
-          hasMore: parseInt(offset) + parseInt(limit) < total
+        data: {
+          sheeps,
+          pagination: {
+            total,
+            limit: parseInt(limit),
+            offset: parseInt(offset),
+            hasMore: parseInt(offset) + parseInt(limit) < total
+          }
         }
       });
     } catch (error) {
