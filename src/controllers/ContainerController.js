@@ -122,6 +122,11 @@ class ContainerController {
       });
     } catch (error) {
       console.error('Error deleting container:', error);
+      if (error.message.includes('violates foreign key constraint')) {
+        return res.status(400).json({
+          error: 'Invalid reference to another resource'
+        });
+      }
       res.status(500).json({
         error: 'Internal server error'
       });
