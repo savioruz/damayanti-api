@@ -4,28 +4,29 @@ class SensorDataController {
   static async getAll(req, res) {
     try {
       const { 
-        limit = 50, 
+        limit = 10, 
         offset = 0, 
         container_id, 
         student_id, 
         date_from, 
         date_to 
       } = req.query;
+      const parsedLimit = Math.min(parseInt(limit), 100); // Max limit of 100
       const filters = {};
       if (container_id) filters.container_id = container_id;
       if (student_id) filters.student_id = student_id;
       if (date_from) filters.date_from = date_from;
       if (date_to) filters.date_to = date_to;
-      const sensorData = await SensorData.findAll(parseInt(limit), parseInt(offset), filters);
+      const sensorData = await SensorData.findAll(parsedLimit, parseInt(offset), filters);
       const total = await SensorData.count(filters);
       res.json({
         data: {
           sensorData,
           pagination: {
             total,
-            limit: parseInt(limit),
+            limit: parsedLimit,
             offset: parseInt(offset),
-            hasMore: parseInt(offset) + parseInt(limit) < total
+            hasMore: parseInt(offset) + parsedLimit < total
           }
         }
       });

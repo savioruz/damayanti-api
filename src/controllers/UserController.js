@@ -5,17 +5,18 @@ class UserController {
   // GET /api/users
   static async getAll(req, res) {
     try {
-      const { limit = 50, offset = 0 } = req.query;
-      const users = await User.findAll(parseInt(limit), parseInt(offset));
+      const { limit = 10, offset = 0 } = req.query;
+      const parsedLimit = Math.min(parseInt(limit), 100); // Max limit of 100
+      const users = await User.findAll(parsedLimit, parseInt(offset));
       const total = await User.count();
       res.json({
         data: {
           users,
           pagination: {
             total,
-            limit: parseInt(limit),
+            limit: parsedLimit,
             offset: parseInt(offset),
-            hasMore: parseInt(offset) + parseInt(limit) < total
+            hasMore: parseInt(offset) + parsedLimit < total
           }
         }
       });

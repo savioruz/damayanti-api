@@ -11,7 +11,7 @@ class Student {
     this.modified_by = data.modified_by || this.id;
   }
 
-  static async findAll(limit = 50, offset = 0, full_name = null) {
+  static async findAll(limit = 10, offset = 0, full_name = null) {
     let sql = 'SELECT id, full_name, created_at, modified_at FROM students';
     let params = [];
     let paramCount = 1;

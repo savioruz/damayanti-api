@@ -3,17 +3,18 @@ class ContainerController {
   // GET /api/containers
   static async getAll(req, res) {
     try {
-      const { limit = 50, offset = 0, student_id } = req.query;
-      const containers = await Container.findAll(parseInt(limit), parseInt(offset), student_id);
+      const { limit = 10, offset = 0, student_id } = req.query;
+      const parsedLimit = Math.min(parseInt(limit), 100);
+      const containers = await Container.findAll(parsedLimit, parseInt(offset), student_id);
       const total = await Container.count(student_id);
       res.json({
         data: {
           containers,
           pagination: {
             total,
-            limit: parseInt(limit),
+            limit: parsedLimit,
             offset: parseInt(offset),
-            hasMore: parseInt(offset) + parseInt(limit) < total
+            hasMore: parseInt(offset) + parsedLimit < total
           }
         }
       });

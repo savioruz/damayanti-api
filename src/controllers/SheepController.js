@@ -3,14 +3,15 @@ class SheepController {
   // GET /api/sheeps
   static async getAll(req, res) {
     try {
-      const { limit = 50, offset = 0, name } = req.query;
+      const { limit = 10, offset = 0, name } = req.query;
+      const parsedLimit = Math.min(parseInt(limit), 100); // Max limit of 100
       let sheeps;
       let total;
       if (name) {
         sheeps = await Sheep.findByName(name);
         total = sheeps.length;
       } else {
-        sheeps = await Sheep.findAll(parseInt(limit), parseInt(offset));
+        sheeps = await Sheep.findAll(parsedLimit, parseInt(offset));
         total = await Sheep.count();
       }
       res.json({
@@ -18,9 +19,9 @@ class SheepController {
           sheeps,
           pagination: {
             total,
-            limit: parseInt(limit),
+            limit: parsedLimit,
             offset: parseInt(offset),
-            hasMore: parseInt(offset) + parseInt(limit) < total
+            hasMore: parseInt(offset) + parsedLimit < total
           }
         }
       });

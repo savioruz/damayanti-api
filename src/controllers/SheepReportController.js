@@ -4,28 +4,29 @@ class SheepReportController {
   static async getAll(req, res) {
     try {
       const { 
-        limit = 50, 
+        limit = 10, 
         offset = 0, 
         sheep_id, 
         status,
         date_from,
         date_to
       } = req.query;
+      const parsedLimit = Math.min(parseInt(limit), 100); // Max limit of 100
       const filters = {};
       if (sheep_id) filters.sheep_id = sheep_id;
       if (status) filters.status = status;
       if (date_from) filters.date_from = date_from;
       if (date_to) filters.date_to = date_to;
-      const sheepReports = await SheepReport.findAll(parseInt(limit), parseInt(offset), filters);
+      const sheepReports = await SheepReport.findAll(parsedLimit, parseInt(offset), filters);
       const total = await SheepReport.count(filters);
       res.json({
         data: {
           sheepReports,
           pagination: {
             total,
-            limit: parseInt(limit),
+            limit: parsedLimit,
             offset: parseInt(offset),
-            hasMore: parseInt(offset) + parseInt(limit) < total
+            hasMore: parseInt(offset) + parsedLimit < total
           }
         }
       });

@@ -18,8 +18,9 @@ const router = express.Router();
  *         name: limit
  *         schema:
  *           type: integer
- *           default: 50
- *         description: Number of users to return
+ *           default: 10
+ *           maximum: 100
+ *         description: Number of users to return (max 100)
  *       - in: query
  *         name: offset
  *         schema:

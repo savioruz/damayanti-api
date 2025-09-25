@@ -3,17 +3,18 @@ class StudentController {
   // GET /api/students
   static async getAll(req, res) {
     try {
-      const { limit = 50, offset = 0, full_name = null } = req.query;
-      const students = await Student.findAll(parseInt(limit), parseInt(offset), full_name);
+      const { limit = 10, offset = 0, full_name = null } = req.query;
+      const parsedLimit = Math.min(parseInt(limit), 100); // Max limit of 100
+      const students = await Student.findAll(parsedLimit, parseInt(offset), full_name);
       const total = await Student.count(full_name);
       res.json({
         data: {
           students,
           pagination: {
             total,
-            limit: parseInt(limit),
+            limit: parsedLimit,
             offset: parseInt(offset),
-            hasMore: parseInt(offset) + parseInt(limit) < total
+            hasMore: parseInt(offset) + parsedLimit < total
           }
         }
       });

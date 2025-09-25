@@ -4,24 +4,25 @@ class ReportController {
   static async getAll(req, res) {
     try {
       const { 
-        limit = 50, 
+        limit = 10, 
         offset = 0, 
         student_id, 
         container_id 
       } = req.query;
+      const parsedLimit = Math.min(parseInt(limit), 100); // Max limit of 100
       const filters = {};
       if (student_id) filters.student_id = student_id;
       if (container_id) filters.container_id = container_id;
-      const reports = await Report.findAll(parseInt(limit), parseInt(offset), filters);
+      const reports = await Report.findAll(parsedLimit, parseInt(offset), filters);
       const total = await Report.count(filters);
       res.json({
         data: {
           reports,
           pagination: {
             total,
-            limit: parseInt(limit),
+            limit: parsedLimit,
             offset: parseInt(offset),
-            hasMore: parseInt(offset) + parseInt(limit) < total
+            hasMore: parseInt(offset) + parsedLimit < total
           }
         }
       });
