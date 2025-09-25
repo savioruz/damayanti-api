@@ -19,7 +19,7 @@ class SensorDataController {
       const total = await SensorData.count(filters);
       res.json({
         data: {
-          sensorData,
+          sensor_data: sensorData,
           pagination: {
             total,
             limit: parsedLimit,

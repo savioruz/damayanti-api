@@ -57,7 +57,7 @@ const router = express.Router();
  *                     data:
  *                       type: object
  *                       properties:
- *                         sensorData:
+ *                         sensor_data:
  *                           type: array
  *                           items:
  *                             $ref: '#/components/schemas/SensorData'
@@ -149,13 +149,6 @@ router.get('/:id', optionalAuth, validateUuidParam, SensorDataController.getById
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/SensorData'
- *           example:
- *             container_id: "123e4567-e89b-12d3-a456-426614174000"
- *             temperature: 25.5
- *             humidity: 60.2
- *             gas: 0.03
- *             ph: 7.2
- *             student_id: "123e4567-e89b-12d3-a456-426614174001"
  *     responses:
  *       201:
  *         description: Sensor data created successfully
@@ -209,9 +202,8 @@ router.post('/', validateSensorData, SensorDataController.create);
  *               ph:
  *                 type: number
  *                 format: decimal
- *               student_id:
+ *               status:
  *                 type: string
- *                 format: uuid
  *     responses:
  *       200:
  *         description: Sensor data updated successfully

@@ -57,7 +57,7 @@ const router = express.Router();
  *                     data:
  *                       type: object
  *                       properties:
- *                         sheepReports:
+ *                         sheep_reports:
  *                           type: array
  *                           items:
  *                             $ref: '#/components/schemas/SheepReport'
