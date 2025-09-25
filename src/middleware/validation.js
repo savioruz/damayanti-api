@@ -17,24 +17,20 @@ const userUpdateSchema = Joi.object({
 }).min(1);
 
 const containerSchema = Joi.object({
-  code: Joi.string().min(1).max(50).required(),
-  location: Joi.string().min(1).max(100).required(),
-  student_id: Joi.string().uuid().required()
+  code: Joi.string().min(1).max(50).required()
 });
 
 const containerUpdateSchema = Joi.object({
-  code: Joi.string().min(1).max(50).optional(),
-  location: Joi.string().min(1).max(100).optional(),
-  student_id: Joi.string().uuid().optional()
+  code: Joi.string().min(1).max(50).optional()
 }).min(1);
 
 const sensorDataSchema = Joi.object({
   container_id: Joi.string().uuid().required(),
-  temperature: Joi.number().precision(2).required(),
-  humidity: Joi.number().precision(2).required(),
-  gas: Joi.number().precision(2).required(),
-  ph: Joi.number().precision(2).required(),
-  student_id: Joi.string().uuid().required()
+  temperature: Joi.number().precision(2).optional(),
+  humidity: Joi.number().precision(2).optional(),
+  gas: Joi.number().precision(2).optional(),
+  ph: Joi.number().precision(2).optional(),
+  status: Joi.string().max(50).optional()
 });
 
 const sensorDataUpdateSchema = Joi.object({
@@ -43,18 +39,20 @@ const sensorDataUpdateSchema = Joi.object({
   humidity: Joi.number().precision(2).optional(),
   gas: Joi.number().precision(2).optional(),
   ph: Joi.number().precision(2).optional(),
-  student_id: Joi.string().uuid().optional()
+  status: Joi.string().max(50).optional()
 }).min(1);
 
 const reportSchema = Joi.object({
   student_id: Joi.string().uuid().required(),
   container_id: Joi.string().uuid().required(),
+  sensor_data_id: Joi.string().uuid().required(),
   notes: Joi.string().allow('').optional()
 });
 
 const reportUpdateSchema = Joi.object({
   student_id: Joi.string().uuid().optional(),
   container_id: Joi.string().uuid().optional(),
+  sensor_data_id: Joi.string().uuid().optional(),
   notes: Joi.string().allow('').optional()
 }).min(1);
 

@@ -33,12 +33,6 @@ const router = express.Router();
  *           format: uuid
  *         description: Filter by container ID
  *       - in: query
- *         name: student_id
- *         schema:
- *           type: string
- *           format: uuid
- *         description: Filter by user ID
- *       - in: query
  *         name: date_from
  *         schema:
  *           type: string

@@ -3,10 +3,10 @@ class ContainerController {
   // GET /api/containers
   static async getAll(req, res) {
     try {
-      const { limit = 10, offset = 0, student_id } = req.query;
+      const { limit = 10, offset = 0 } = req.query;
       const parsedLimit = Math.min(parseInt(limit), 100);
-      const containers = await Container.findAll(parsedLimit, parseInt(offset), student_id);
-      const total = await Container.count(student_id);
+      const containers = await Container.findAll(parsedLimit, parseInt(offset));
+      const total = await Container.count();
       res.json({
         data: {
           containers,
@@ -48,7 +48,7 @@ class ContainerController {
   // POST /api/containers
   static async create(req, res) {
     try {
-      const { code, location, student_id } = req.body;
+      const { code } = req.body;
       // Check if container code already exists
       const existingContainer = await Container.findByCode(code);
       if (existingContainer) {
@@ -58,10 +58,8 @@ class ContainerController {
       }
       const containerData = {
         code,
-        location,
-        student_id,
-        created_by: req.user?.id || student_id,
-        modified_by: req.user?.id || student_id
+        created_by: req.user?.id || null,
+        modified_by: req.user?.id || null
       };
       const container = new Container(containerData);
       await container.save();
@@ -79,7 +77,7 @@ class ContainerController {
   static async update(req, res) {
     try {
       const { id } = req.params;
-      const { code, location, student_id } = req.body;
+      const { code } = req.body;
       const existingContainer = await Container.findById(id);
       if (!existingContainer) {
         return res.status(404).json({
@@ -97,8 +95,6 @@ class ContainerController {
       }
       const updateData = {};
       if (code) updateData.code = code;
-      if (location) updateData.location = location;
-      if (student_id) updateData.student_id = student_id;
       await Container.update(id, updateData, req.user?.id || existingContainer.modified_by);
       res.json({
         message: 'Container updated successfully'

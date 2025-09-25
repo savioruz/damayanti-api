@@ -1,14 +1,8 @@
 CREATE TABLE IF NOT EXISTS containers (
     id VARCHAR(36) PRIMARY KEY,
     code VARCHAR(50) NOT NULL,
-    location VARCHAR(100) NOT NULL,
-    student_id VARCHAR(36) NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     modified_at TIMESTAMPTZ DEFAULT NOW(),
     created_by VARCHAR(36) NOT NULL,
     modified_by VARCHAR(36) NOT NULL
 );
-
-ALTER TABLE containers
-ADD CONSTRAINT fk_student FOREIGN KEY (student_id) REFERENCES students(id)
-ON UPDATE CASCADE ON DELETE RESTRICT;

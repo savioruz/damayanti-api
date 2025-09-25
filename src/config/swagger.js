@@ -44,7 +44,7 @@ const options = {
       schemas: {
         User: {
           type: 'object',
-          required: ['email', 'password', 'full_name'],
+          required: ['email', 'password', 'full_name', 'role'],
           properties: {
             id: {
               type: 'string',
@@ -54,11 +54,13 @@ const options = {
             email: {
               type: 'string',
               format: 'email',
+              maxLength: 100,
               description: 'User email address'
             },
             password: {
               type: 'string',
               minLength: 6,
+              maxLength: 255,
               description: 'User password (min 6 characters)'
             },
             full_name: {
@@ -66,6 +68,10 @@ const options = {
               minLength: 2,
               maxLength: 255,
               description: 'User full name'
+            },
+            role: {
+              type: 'integer',
+              description: 'User role (numeric value)'
             },
             created_at: {
               type: 'string',
@@ -76,6 +82,16 @@ const options = {
               type: 'string',
               format: 'date-time',
               description: 'User last modification timestamp'
+            },
+            created_by: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID of user who created this user'
+            },
+            modified_by: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID of user who last modified this user'
             }
           }
         },
@@ -92,6 +108,9 @@ const options = {
             },
             full_name: {
               type: 'string'
+            },
+            role: {
+              type: 'integer'
             },
             created_at: {
               type: 'string',
@@ -132,7 +151,7 @@ const options = {
         },
         Container: {
           type: 'object',
-          required: ['code', 'location', 'user_id'],
+          required: ['code'],
           properties: {
             id: {
               type: 'string',
@@ -143,16 +162,6 @@ const options = {
               type: 'string',
               maxLength: 50,
               description: 'Container code'
-            },
-            location: {
-              type: 'string',
-              maxLength: 100,
-              description: 'Container location'
-            },
-            user_id: {
-              type: 'string',
-              format: 'uuid',
-              description: 'ID of the user who owns this container'
             },
             created_at: {
               type: 'string',
@@ -166,7 +175,7 @@ const options = {
         },
         SensorData: {
           type: 'object',
-          required: ['container_id', 'temperature', 'humidity', 'gas', 'ph', 'user_id'],
+          required: ['container_id'],
           properties: {
             id: {
               type: 'string',
@@ -197,9 +206,10 @@ const options = {
               format: 'decimal',
               description: 'pH reading'
             },
-            user_id: {
+            status: {
               type: 'string',
-              format: 'uuid'
+              maxLength: 50,
+              description: 'Status of the sensor data'
             },
             created_at: {
               type: 'string',
@@ -213,19 +223,27 @@ const options = {
         },
         Report: {
           type: 'object',
-          required: ['user_id', 'container_id'],
+          required: ['student_id', 'container_id', 'sensor_data_id'],
           properties: {
             id: {
               type: 'string',
-              format: 'uuid'
+              format: 'uuid',
+              description: 'Unique identifier for the report'
             },
-            user_id: {
+            student_id: {
               type: 'string',
-              format: 'uuid'
+              format: 'uuid',
+              description: 'Foreign key reference to students table'
             },
             container_id: {
               type: 'string',
-              format: 'uuid'
+              format: 'uuid',
+              description: 'Foreign key reference to containers table'
+            },
+            sensor_data_id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'Foreign key reference to sensor_data table'
             },
             notes: {
               type: 'string',
@@ -233,11 +251,23 @@ const options = {
             },
             created_at: {
               type: 'string',
-              format: 'date-time'
+              format: 'date-time',
+              description: 'Report creation timestamp'
             },
             modified_at: {
               type: 'string',
-              format: 'date-time'
+              format: 'date-time',
+              description: 'Report last modification timestamp'
+            },
+            created_by: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID of user who created the report'
+            },
+            modified_by: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID of user who last modified the report'
             }
           }
         },
@@ -247,7 +277,8 @@ const options = {
           properties: {
             id: {
               type: 'string',
-              format: 'uuid'
+              format: 'uuid',
+              description: 'Unique identifier for the sheep'
             },
             name: {
               type: 'string',
@@ -261,11 +292,23 @@ const options = {
             },
             created_at: {
               type: 'string',
-              format: 'date-time'
+              format: 'date-time',
+              description: 'Sheep creation timestamp'
             },
             modified_at: {
               type: 'string',
-              format: 'date-time'
+              format: 'date-time',
+              description: 'Sheep last modification timestamp'
+            },
+            created_by: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID of user who created the sheep'
+            },
+            modified_by: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID of user who last modified the sheep'
             }
           }
         },
@@ -275,11 +318,13 @@ const options = {
           properties: {
             id: {
               type: 'string',
-              format: 'uuid'
+              format: 'uuid',
+              description: 'Unique identifier for the sheep report'
             },
             sheep_id: {
               type: 'string',
-              format: 'uuid'
+              format: 'uuid',
+              description: 'Foreign key reference to sheeps table'
             },
             feeding_time: {
               type: 'string',
@@ -293,11 +338,23 @@ const options = {
             },
             created_at: {
               type: 'string',
-              format: 'date-time'
+              format: 'date-time',
+              description: 'Sheep report creation timestamp'
             },
             modified_at: {
               type: 'string',
-              format: 'date-time'
+              format: 'date-time',
+              description: 'Sheep report last modification timestamp'
+            },
+            created_by: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID of user who created the sheep report'
+            },
+            modified_by: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID of user who last modified the sheep report'
             }
           }
         },

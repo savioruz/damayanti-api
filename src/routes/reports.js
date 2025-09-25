@@ -112,6 +112,7 @@ router.get('/:id', optionalAuth, validateUuidParam, ReportController.getById);
  *           example:
  *             student_id: "123e4567-e89b-12d3-a456-426614174000"
  *             container_id: "123e4567-e89b-12d3-a456-426614174001"
+ *             sensor_data_id: "123e4567-e89b-12d3-a456-426614174002"
  *             notes: "Container inspection completed. All systems normal."
  *     responses:
  *       201:
@@ -155,6 +156,9 @@ router.post('/', validateReport, ReportController.create);
  *                 type: string
  *                 format: uuid
  *               container_id:
+ *                 type: string
+ *                 format: uuid
+ *               sensor_data_id:
  *                 type: string
  *                 format: uuid
  *               notes:

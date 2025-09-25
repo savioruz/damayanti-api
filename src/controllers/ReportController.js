@@ -56,13 +56,14 @@ class ReportController {
   // POST /api/reports
   static async create(req, res) {
     try {
-      const { student_id, container_id, notes } = req.body;
+      const { student_id, container_id, sensor_data_id, notes } = req.body;
       const reportData = {
         student_id,
         container_id,
+        sensor_data_id,
         notes,
-        created_by: req.user?.id || student_id,
-        modified_by: req.user?.id || student_id
+        created_by: req.user?.id || null,
+        modified_by: req.user?.id || null
       };
       const report = new Report(reportData);
       await report.save();
@@ -80,7 +81,7 @@ class ReportController {
   static async update(req, res) {
     try {
       const { id } = req.params;
-      const { student_id, container_id, notes } = req.body;
+      const { student_id, container_id, sensor_data_id, notes } = req.body;
       const existingReport = await Report.findById(id);
       if (!existingReport) {
         return res.status(404).json({
@@ -90,6 +91,7 @@ class ReportController {
       const updateData = {};
       if (student_id) updateData.student_id = student_id;
       if (container_id) updateData.container_id = container_id;
+      if (sensor_data_id) updateData.sensor_data_id = sensor_data_id;
       if (notes !== undefined) updateData.notes = notes;
       await Report.update(id, updateData, req.user?.id || existingReport.modified_by);
       res.json({
